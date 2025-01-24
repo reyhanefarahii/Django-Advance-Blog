@@ -9,33 +9,33 @@ class UserManager(BaseUserManager):
     for authentication instead of usernames.
     """
 
-    def create_user(self, email, password, **kwargs):
+    def create_user(self, email, password, **extra_fields):
         """
         Create and save a user with the given email and password and extra data.
         """
         if not email:
             raise ValueError(_("The Email must be set"))
         email = self.normalize_email(email)
-        user = self.model(email = email, **kwargs)
+        user = self.model(email = email, **extra_fields)
         user.set_password(password)
         user.save()
         return user
 
 
 
-    def Create_superuser(self, email, password, **kwargs):
+    def create_superuser(self, email, password, **extra_fields):
         """
         Create and save a SuperUser with the given email and password and extra data.
         """
-        kwargs.setdefault('is_staff',True)
-        kwargs.setdefault('is_superuser',True)
-        kwargs.setdefault('is_active',True)
-        
-        if kwargs.get("is_staff") is not True:
+        extra_fields.setdefault('is_staff',True)
+        extra_fields.setdefault('is_superuser',True)
+        extra_fields.setdefault('is_active',True)
+
+        if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
-        if kwargs.get("is_superuser") is not True:
+        if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
-        return self.create_user(email, password, **kwargs)
+        return self.create_user(email, password, **extra_fields)
     
 
 
